@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Image & Joke API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 2s ease-out;
+            width: 350px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #4e6b87;
+            margin-bottom: 20px;
+            animation: slideIn 1.5s ease-out;
+        }
+
+        .fact-container {
+            font-size: 18px;
+            color: #333;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .fact-container:hover {
+            background-color: #fffae1;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #4e6b87;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: #5a7a94;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cat Image & Joke</h1>
+        <div>
+            <img id="catImage" src="" alt="Random Cat Image">
+        </div>
+        <div class="fact-container">
+            <p id="joke">Click the button to get a joke!</p>
+        </div>
+        <button id="fetchData">Get Cat & Joke</button>
+    </div>
+
+    <script>
+        document.getElementById('fetchData').addEventListener('click', fetchData);
+
+        function fetchData() {
+            const jokeElement = document.getElementById('joke');
+            const catImage = document.getElementById('catImage');
+            
+            // Fetch Random Cat Image (No API Key)
+            fetch('https://api.thecatapi.com/v1/images/search')
+                .then(response => response.json())
+                .then(data => {
+                    const imageUrl = data[0].url;
+                    catImage.src = imageUrl;
+                })
+                .catch(error => {
+                    console.error('Error fetching cat image:', error);
+                    catImage.src = '';
+                });
+
+            // Fetch Random Joke (JokeAPI - Hindi)
+            fetch('https://v2.jokeapi.dev/joke/Any?lang=hi&type=single') // JokeAPI for Hindi jokes
+                .then(response => response.json())
+                .then(data => {
+                    if (data.type === 'single') {
+                        jokeElement.textContent = data.joke;
+                    }
+                })
+                .catch(error => {
+                    jokeElement.textContent = 'Oops! Something went wrong.';
+                    console.error('Error fetching joke:', error);
+                });
+        }
+    </script>
+</body>
+</html>
